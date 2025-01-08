@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <title>旅程表</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #2d3436;
+            margin: 0;
+            padding: 0;
+            background: #f7f1e3;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2b5876, #4e4376);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 50px;
+            background: #f7f1e3;
+            clip-path: polygon(0 100%, 100% 100%, 100% 0, 0 100%);
+        }
+
+        .header h1 {
+            font-size: 2.8rem;
+            margin: 0;
+            font-weight: 300;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .destination-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .day-section {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .day-header {
+            background: #2b5876;
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .day-header i {
+            font-size: 1.5rem;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            background: #f8f9fa;
+            border-radius: 12px;
+            transition: transform 0.3s ease;
+        }
+
+        .timeline-item:hover {
+            transform: translateX(10px);
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -10px;
+            top: 50%;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #2b5876;
+            transform: translateY(-50%);
+            box-shadow: 0 0 0 5px rgba(43, 88, 118, 0.2);
+        }
+
+        .time {
+            font-weight: bold;
+            color: #2b5876;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .time i {
+            color: #4e4376;
+        }
+
+        .transport-icon {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #e3f2fd;
+            border-radius: 20px;
+            color: #1976d2;
+            font-size: 0.9rem;
+            margin: 0.5rem 0;
+        }
+
+        .location {
+            color: #2d3436;
+            font-weight: 500;
+            margin: 0.5rem 0;
+        }
+
+        .duration {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #636e72;
+            font-size: 0.9rem;
+            margin-left: 1rem;
+        }
+
+        .note {
+            background: #fff3e0;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: #e67e22;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .location-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 1rem 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .location-image {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+
+        .location-info {
+            padding: 1rem;
+        }
+
+        .guide-section {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            margin: 2rem 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .guide-photo {
+            width: 120px;
+            height: 120px;
+            flex-shrink: 0;
+            overflow: hidden;
+            border-radius: 50%;
+            background: #f5f5f5;
+            display: flex;
+            align-items: flex-end; /* Align image to the bottom */
+        }
+        .guide-photo img {
+            scale: 1.5;
+            transform: translateY(10px); /* Move image down */
+        }
+
+        .guide-info {
+            flex-grow: 1;
+        }
+
+        .guide-name {
+            font-size: 1.8rem;
+            color: #2b5876;
+            margin-bottom: 0.5rem;
+        }
+
+        .guide-title {
+            font-size: 1.1rem;
+            color: #636e72;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .timeline-item {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <h1>
+            <i class="fas fa-map-marked-alt"></i>
+            旅程表
+        </h1>
+    </div>
+
+    <div class="container">
+        <div class="guide-section">
+            <div class="guide-photo">
+                <img src="images/yoshiki.jpg" alt="Guide Yoshiki"
+                    style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover;" />
+            </div>
+            <div class="guide-info">
+                <div class="guide-name">Yoshiki</div>
+                <div class="guide-title">Tour Guide</div>
+                <div>思い出に残る旅のお手伝いをさせていただきます。</div>
+            </div>
+        </div>
+        <div class="day-section">
+            <img src="images/onsen.jpg" alt="名古屋・下呂温泉の風景" class="destination-image" />
+
+            <div class="day-header">
+                <span><i class="fas fa-calendar-day"></i> 1月11日(土)</span>
+                <i class="fas fa-sun"></i>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="time">
+                        <i class="fas fa-clock"></i>
+                        8:00
+                    </div>
+                    <div class="location">
+                        JR大阪駅前(桜橋口JR線高架下) → 名古屋駅
+                    </div>
+                    <div class="transport-icon">
+                        <i class="fas fa-bus"></i> バス
+                        <span class="duration">
+                            <i class="fas fa-hourglass-half"></i>
+                            3時間30分程度
+                        </span>
+                    </div>
+                    <div class="note">
+                        <i class="fas fa-info-circle"></i>
+                        大阪バス1番バス停
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="time">
+                        <i class="fas fa-clock"></i>
+                        13:00頃
+                    </div>
+                    <div class="location">
+                        名古屋駅 → 博物館明治村
+                    </div>
+                    <div class="transport-icon">
+                        <i class="fas fa-train"></i> 電車
+                        <span class="duration">
+                            <i class="fas fa-hourglass-half"></i>
+                            57分
+                        </span>
+                    </div>
+                    <div class="location-card">
+                        <img src="images/meijimura.jpg" alt="明治村の風景" class="location-image" />
+                        <div class="location-info">
+                            <h3>博物館明治村</h3>
+                            <p>明治時代の建築物を保存・展示する野外博物館</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="time">
+                        <i class="fas fa-clock"></i>
+                        15:30頃
+                    </div>
+                    <div class="location">
+                        博物館明治村 → 岐阜県下呂市
+                    </div>
+                    <div class="transport-icon">
+                        <i class="fas fa-train"></i> 電車
+                        <span class="duration">
+                            <i class="fas fa-hourglass-half"></i>
+                            2時間6分
+                        </span>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="time">
+                        <i class="fas fa-moon"></i>
+                        夜
+                    </div>
+                    <div class="location">
+                        宿へ移動 ホテル：下呂スプリングスホテル
+                    </div>
+                    <div class="transport-icon">
+                        <i class="fas fa-walking"></i> 徒歩
+                        <span class="duration">
+                            <i class="fas fa-hourglass-half"></i>
+                            25分程度
+                        </span>
+                    </div>
+                    <div class="location-card">
+                        <img src="images/hotel.jpg" alt="下呂スプリングスホテル" class="location-image" />
+                        <div class="location-info">
+                            <h3>下呂スプリングスホテル</h3>
+                            <p>下呂温泉を代表する温泉旅館</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="note">
+            <i class="fas fa-info-circle"></i>
+            下呂での時間次第で白川郷合掌村、美山蓮如洞の訪問を検討
+        </div>
+
+        <div class="day-section">
+            <div class="day-header">
+                <span><i class="fas fa-calendar-day"></i> 1月12日(日)</span>
+                <i class="fas fa-cloud-sun"></i>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="time">
+                        <i class="fas fa-clock"></i>
+                        13:00頃
+                    </div>
+                    <div class="location">
+                        宿：下呂スプリングスホテル → 鵜沼駅
+                    </div>
+                    <div class="transport-icon">
+                        <i class="fas fa-train"></i> 電車
+                        <span class="duration">
+                            <i class="fas fa-hourglass-half"></i>
+                            1時間19分
+                        </span>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="time">
+                        <i class="fas fa-clock"></i>
+                        14:45頃
+                    </div>
+                    <div class="location">
+                        鵜沼駅 → 名古屋駅
+                    </div>
+                    <div class="transport-icon">
+                        <i class="fas fa-train"></i> 電車
+                        <span class="duration">
+                            <i class="fas fa-hourglass-half"></i>
+                            40分
+                        </span>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="time">
+                        <i class="fas fa-clock"></i>
+                        18:30
+                    </div>
+                    <div class="location">
+                        名古屋駅 → 大阪駅
+                    </div>
+                    <div class="transport-icon">
+                        <i class="fas fa-bus"></i> バス
+                        <span class="duration">
+                            <i class="fas fa-hourglass-half"></i>
+                            3時間30分程度
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
